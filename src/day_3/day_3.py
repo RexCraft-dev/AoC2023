@@ -1,6 +1,7 @@
 data = []
 nums = []
 symbols = list('&*#/@$%+-=')
+total_sum = 0
 
 
 def find_symbols(lst):
@@ -43,8 +44,7 @@ while i < len(data):
                 is_counted = find_symbols(check_lst)
 
                 if is_counted:
-                    nums.append(current_num)
-                    print(f'Current number appended: {current_num}')
+                    total_sum += int(current_num)
 
                 current_num = ''
                 check_lst = []
@@ -56,22 +56,23 @@ while i < len(data):
                     check_lst.append(data[i - 1][k])
                 else:
                     while k < len(data[i]) and data[i][k].isdigit():
-                        if k == len(data[i]):
+                        if k == len(data[i])-1:
                             current_num += data[i][k]
                             check_lst.append(data[i-1][k])
+                            k += 1
                         else:
                             current_num += data[i][k]
                             check_lst.append(data[i][k+1])
                             check_lst.append(data[i-1][k])
                             check_lst.append(data[i-1][k+1])
+                            check_lst.append(data[i-1][k-1])
                             check_lst.append(data[i][k-1])
                             k += 1
 
                     is_counted = find_symbols(check_lst)
 
                     if is_counted and current_num != '':
-                        print(f'Current number appended: {current_num}')
-                        nums.append(current_num)
+                        total_sum += int(current_num)
                     current_num = ''
                     check_lst = []
         else:
@@ -81,32 +82,27 @@ while i < len(data):
                     check_lst.append(data[i-1][k])
                     check_lst.append(data[i+1][k])
                 else:
+                    current_num += data[i][k]
+                    check_lst.append(data[i-1][k-1])
+                    check_lst.append(data[i-1][k])
+                    check_lst.append(data[i][k-1])
+                    check_lst.append(data[i+1][k-1])
+                    check_lst.append(data[i+1][k])
+
                     if k + 1 < len(data[i]):
-                        current_num += data[i][k]
-                        check_lst.append(data[i-1][k-1])
-                        check_lst.append(data[i-1][k])
-                        check_lst.append(data[i-1][k+1])
+                        check_lst.append(data[i - 1][k + 1])
+                        check_lst.append(data[i][k + 1])
+                        check_lst.append(data[i + 1][k + 1])
 
-                        check_lst.append(data[i][k-1])
-                        check_lst.append(data[i][k+1])
-
-                        check_lst.append(data[i+1][k-1])
-                        check_lst.append(data[i+1][k])
-                        check_lst.append(data[i+1][k+1])
                 k += 1
 
             is_counted = find_symbols(check_lst)
 
             if is_counted and current_num != '':
-                print(f'Current number appended: {current_num}')
-                nums.append(current_num)
+                total_sum += int(current_num)
             current_num = ''
             check_lst = []
         k += 1
-    print(nums)
     i += 1
 
-filtered_list = [int(item) for item in nums if item != '']
-
-print(filtered_list)
-print(sum(filtered_list))
+print(total_sum)
